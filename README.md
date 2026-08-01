@@ -1,6 +1,6 @@
-# adaltavoce
+# adaltavoce — Kirby base project
 
-A Kirby CMS site built on [Kirby Plainkit](https://github.com/getkirby/plainkit), managed with Composer.
+A Kirby CMS base built on [Kirby Plainkit](https://github.com/getkirby/plainkit) + Tailwind CSS v4, managed with Composer. This repo has no client-specific content — it's meant to be cloned as the starting point for new sites. See [Starting a new project from this base](#starting-a-new-project-from-this-base) below.
 
 ## Requirements
 
@@ -53,6 +53,31 @@ bun run dev
 Then open `http://localhost:8000` in your browser.
 
 The Kirby Panel is available at `http://localhost:8000/panel` — you will be prompted to create an admin account on first visit.
+
+## Starting a new project from this base
+
+To spin up a new client site from this template:
+
+```bash
+git clone <this-repo-url> new-project-name
+cd new-project-name
+
+# Detach from this repo's history and start fresh
+rm -rf .git
+git init
+```
+
+Then, before the first commit:
+
+1. **`composer.json`** — update `name` (e.g. `clientname/site`) and `description`.
+2. **`package.json`** — no changes needed unless you rename scripts.
+3. **`site/blueprints/site.yml`** and the Panel's Site Settings — set the real site title once you log into the Panel.
+4. **`README.md`** — replace this file's title/intro with the new project's name and description; delete this section and `CLAUDE.md`'s "Starting a new project from this base" pointer if you don't want them carried over (optional — harmless to leave).
+5. Run `composer install && bun install` and start building pages, blueprints, and templates on top of `site/templates/default.php`.
+
+Everything else — the Tailwind setup, header/footer snippets, `.gitignore`, and `deploy-example.sh` pattern — carries over as-is.
+
+When this base itself improves (a new convention, a fixed gotcha, a better default snippet), consider whether the change belongs here so future clones benefit too.
 
 ## Frontend build
 

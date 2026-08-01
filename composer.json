@@ -1,6 +1,6 @@
 {
-  "name": "adaltavoce/site",
-  "description": "Adaltavoce - Kirby CMS site",
+  "name": "protorob/kirby-base",
+  "description": "Kirby CMS + Plainkit + Tailwind base project, used as a starting point for new sites",
   "type": "project",
   "keywords": [
     "kirby",
