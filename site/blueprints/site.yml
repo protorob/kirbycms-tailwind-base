@@ -1,5 +1,19 @@
 title: Site
 
+# Reusable swatches for every color field below — matches this base's
+# default neutral palette (src/main.css has no custom @theme colors yet).
+# Update these hex values once a project defines its own brand colors.
+.hero-swatches: &heroSwatches
+  "#ffffff": White
+  "#fafafa": Neutral 50
+  "#f5f5f5": Neutral 100
+  "#e5e5e5": Neutral 200
+  "#a3a3a3": Neutral 400
+  "#404040": Neutral 700
+  "#262626": Neutral 800
+  "#171717": Neutral 900
+  "#000000": Black
+
 tabs:
   content:
     label: Content
@@ -28,6 +42,118 @@ tabs:
       ctaUrl:
         label: URL
         type: url
+
+      heroHeadline:
+        type: headline
+        label: Homepage hero section
+        help: Only rendered on the homepage.
+
+      eyebrow:
+        label: Eyebrow
+        type: text
+
+      heroTitle:
+        label: Title
+        type: text
+
+      heroDescription:
+        label: Description
+        type: textarea
+        size: small
+
+      heroTextColor:
+        label: Text color
+        type: color
+        options: *heroSwatches
+        default: "#ffffff"
+
+      heroButtons:
+        label: Buttons
+        type: structure
+        fields:
+          icon:
+            label: Icon
+            type: icon
+            folder: assets/icons
+            max: 1
+          label:
+            label: Label
+            type: text
+            required: true
+          url:
+            label: URL
+            type: url
+            required: true
+          color:
+            label: Button color
+            type: color
+            options: *heroSwatches
+            default: "#171717"
+          textColor:
+            label: Text color
+            type: color
+            options: *heroSwatches
+            default: "#ffffff"
+        columns:
+          icon:
+            width: 1/12
+          label:
+            width: 3/12
+          url:
+            width: 4/12
+          color:
+            width: 2/12
+          textColor:
+            width: 2/12
+
+      heroBackgroundHeadline:
+        type: headline
+        label: Hero background
+
+      heroFullWidth:
+        label: Layout
+        type: toggle
+        text:
+          - Contained
+          - Full width
+
+      heroBackgroundType:
+        label: Background type
+        type: radio
+        default: image
+        options:
+          image: Image
+          color: Solid color
+
+      heroBackgroundImage:
+        label: Background image
+        type: files
+        multiple: false
+        query: site.images
+        when:
+          heroBackgroundType: image
+
+      heroImageOverlay:
+        label: Add color overlay
+        type: toggle
+        when:
+          heroBackgroundType: image
+
+      heroOverlayColor:
+        label: Overlay color
+        type: color
+        options: *heroSwatches
+        default: "#000000"
+        when:
+          heroImageOverlay: true
+
+      heroBackgroundColor:
+        label: Background color
+        type: color
+        options: *heroSwatches
+        default: "#171717"
+        when:
+          heroBackgroundType: color
 
   companyInfo:
     label: Company information

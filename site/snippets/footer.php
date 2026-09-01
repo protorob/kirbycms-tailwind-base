@@ -5,7 +5,7 @@ $cookiePage = $site->cookiePage()->toPage();
 ?>
 
 <footer class="border-t border-neutral-200 mt-auto">
-  <div class="max-w-5xl mx-auto px-4 py-12 flex flex-col gap-8">
+  <div class="max-w-6xl mx-auto px-4 py-12 flex flex-col gap-8">
 
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8">
       <div class="text-sm text-neutral-500 space-y-1">

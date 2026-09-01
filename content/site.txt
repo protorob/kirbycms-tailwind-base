@@ -14,6 +14,57 @@ Ctaurl: https://robertobriceno.eu
 
 ----
 
+Eyebrow: For lazy developers
+
+----
+
+Herotitle: The only KirbyCMS Starter You'll Ever need for real.
+
+----
+
+Herodescription: A KirbyCMS Starter project for websites of any size, sensible defaults and very opinionated. You'll have options for making it i18n ready, Add Deepl automatic content translation with (link: https://kirby.tools/content-translator text: Kirby Content Translator) and SEO features from (link: https://www.andkindness.com/seo text: SEO for Kirby CMS) from andkindness.
+
+----
+
+Herotextcolor: #555879
+
+----
+
+Herobuttons:
+
+- 
+  icon: ""
+  label: Contact →
+  url: https://robertobriceno.eu/
+  color: '#98a1bc'
+  textcolor: '#555879'
+
+----
+
+Herofullwidth: true
+
+----
+
+Herobackgroundtype: color
+
+----
+
+Herobackgroundimage: 
+
+----
+
+Heroimageoverlay: false
+
+----
+
+Herooverlaycolor: 
+
+----
+
+Herobackgroundcolor: #f4ebd3
+
+----
+
 Logo: 
 
 ----
@@ -43,3 +94,11 @@ Cookiepage:
 ----
 
 Social: 
+
+----
+
+Heropaddingx: 
+
+----
+
+Heropaddingy: 

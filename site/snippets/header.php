@@ -13,7 +13,7 @@ $logo = $site->logo()->toFile();
 <body class="min-h-screen flex flex-col bg-white font-sans text-neutral-800 antialiased">
 
 <header id="site-header" class="border-b border-neutral-200">
-  <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
 
     <a href="<?= $site->url() ?>" class="flex items-center font-semibold tracking-tight text-lg">
       <?php if ($logo): ?>

@@ -100,6 +100,17 @@ Every site built from this base needs the same chrome — a header CTA, company 
 - `site/snippets/footer.php` and `header.php` render all of the above and degrade cleanly when a field is empty (e.g. no logo yet → falls back to the text title; no social links yet → nothing renders in that row).
 - Icons (CTA and social links) use [`tobimori/kirby-icon-field`](https://github.com/tobimori/kirby-icon-field) (installed via Composer, `type: icon` in the blueprint), reading SVGs from `assets/icons/` (tracked in git, unlike `assets/css`/`assets/js`). A starter set of common platforms ships in that folder (Facebook, Instagram, X, LinkedIn, YouTube, TikTok, WhatsApp, Pinterest) — drop in more `.svg` files there as needed and they show up in the field's picker automatically.
 
+## Homepage hero section
+
+The homepage still uses the regular `default.yml`/`default.php` — there's no dedicated home blueprint or template. The hero banner is instead a "Homepage hero section" field group inside `site/blueprints/site.yml`'s Header tab, rendered by `site/snippets/hero.php`, which `default.php` includes only when `$page->isHomePage()` is true. Every other page ignores these fields entirely.
+
+- **Fields**: eyebrow, title, description, an overall hero text color, and a repeatable buttons structure (icon + label + URL + per-button background color + text color).
+- **Layout toggle**: "Full width" vs "Contained" (`heroFullWidth`) — contained shows the hero as a rounded, inset card matching the page's `max-w-5xl` container; full width bleeds it edge-to-edge with square corners, flush against the header.
+- **Background**: a radio picks Image or Solid color; the relevant fields (image upload, "add color overlay" toggle + overlay color, or background color) appear conditionally via blueprint `when:` — each condition is a single exact-value match, since Kirby's `when` only supports "and" logic natively (no plugin needed here).
+- Color fields use Kirby's [color field](https://getkirby.com/docs/reference/panel/fields/color) with a shared set of swatches (a YAML anchor `&heroSwatches` at the top of `site.yml`) matching this base's default neutral palette — update those hex values once a project defines its own brand colors in `src/main.css`'s `@theme` block.
+- Renders nothing if eyebrow/title/description/buttons are all empty — a fresh clone's homepage looks exactly like any other default page until the hero fields are filled in.
+- Colors are applied via inline `style` attributes (not Tailwind classes) since they're arbitrary values chosen at runtime in the Panel, not known at Tailwind's build time. Each dynamic value is escaped once with `esc($value, 'attr')` (the attribute-embedding context) — escaping with `'css'` first and `'attr'` again double-encodes and corrupts the style string.
+
 ## Multi-language support
 
 This base ships single-language by default, but is multi-language-ready: `site/snippets/language-switcher.php` renders nothing unless Kirby's multi-language mode is on, so it's already wired into `header.php` (desktop nav and mobile menu) with zero visual effect today.
