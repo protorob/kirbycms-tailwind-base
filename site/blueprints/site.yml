@@ -190,15 +190,15 @@ tabs:
         type: headline
         label: Legal pages
 
-      privacyPage:
-        label: Privacy policy page
-        type: pages
-        multiple: false
-
-      cookiePage:
-        label: Cookie policy page
-        type: pages
-        multiple: false
+      legalPages:
+        label: Legal pages
+        type: structure
+        fields:
+          page:
+            label: Page
+            type: pages
+            multiple: false
+            required: true
 
       socialHeadline:
         type: headline

@@ -2,11 +2,7 @@ Title: Home
 
 ----
 
-Text:
-
-Welcome to the KirbyCMS + Tailwind v4 starter site. We suggest you to read through the (link: https://github.com/protorob/kirbycms-tailwind-base#kirbycms--tailwind--base-project text: README) in the github repo so you can have an idea on our very opinionated way to use KirbyCMS and how to activate multilanguage and other stuff.
-
-Have fun :)
+Text: [{"content":{"text":"<p>Welcome to the KirbyCMS + Tailwind v4 starter site. We suggest you to read through the <a href=\"https://github.com/protorob/kirbycms-tailwind-base#kirbycms--tailwind--base-project\">README</a> in the github repo so you can have an idea on our very opinionated way to use KirbyCMS and how to activate multilanguage and other stuff.</p>"},"id":"6b7370c6-ddbf-4c2b-b86c-e3797ce7cacb","isHidden":false,"type":"text"},{"content":{"text":"<p>Have fun :)</p>"},"id":"00790d16-2741-499d-8666-5e831ece03cf","isHidden":false,"type":"text"}]
 
 ----
 

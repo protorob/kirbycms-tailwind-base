@@ -85,11 +85,7 @@ Email:
 
 ----
 
-Privacypage: 
-
-----
-
-Cookiepage: 
+Legalpages: 
 
 ----
 
@@ -100,6 +96,14 @@ Social:
   label: Github
   url: >
     https://github.com/protorob/kirbycms-tailwind-base
+
+----
+
+Privacypage: 
+
+----
+
+Cookiepage: 
 
 ----
 

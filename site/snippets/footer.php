@@ -1,7 +1,6 @@
 <?php
 $social = $site->social()->toStructure();
-$privacyPage = $site->privacyPage()->toPage();
-$cookiePage = $site->cookiePage()->toPage();
+$legalPages = $site->legalPages()->toStructure();
 ?>
 
 <footer class="border-t border-neutral-200 mt-auto">
@@ -39,14 +38,13 @@ $cookiePage = $site->cookiePage()->toPage();
     <div class="pt-8 border-t border-neutral-100 text-sm text-neutral-400 flex flex-col sm:flex-row items-center justify-between gap-2">
       <span>&copy; <?= date('Y') ?> <?= $site->title() ?></span>
 
-      <?php if ($privacyPage || $cookiePage): ?>
+      <?php if ($legalPages->isNotEmpty()): ?>
         <nav class="flex gap-4">
-          <?php if ($privacyPage): ?>
-            <a href="<?= $privacyPage->url() ?>" class="hover:text-neutral-800 transition-colors"><?= $privacyPage->title() ?></a>
-          <?php endif ?>
-          <?php if ($cookiePage): ?>
-            <a href="<?= $cookiePage->url() ?>" class="hover:text-neutral-800 transition-colors"><?= $cookiePage->title() ?></a>
-          <?php endif ?>
+          <?php foreach ($legalPages as $legalPage): ?>
+            <?php if ($target = $legalPage->page()->toPage()): ?>
+              <a href="<?= $target->url() ?>" class="hover:text-neutral-800 transition-colors"><?= $target->title() ?></a>
+            <?php endif ?>
+          <?php endforeach ?>
         </nav>
       <?php endif ?>
     </div>

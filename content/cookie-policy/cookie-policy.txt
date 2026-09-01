@@ -2,7 +2,7 @@ Title: Cookie Policy
 
 ----
 
-Text: Replace this with the site's actual cookie policy before going live.
+Text: [{"content":{"text":"<p>Replace this with the site's actual cookie policy before going live.</p>"},"id":"c5d43bc1-fa28-45fa-87d7-37d2d3e55a01","isHidden":false,"type":"text"}]
 
 ----
 

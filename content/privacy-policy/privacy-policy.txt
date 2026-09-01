@@ -2,7 +2,7 @@ Title: Privacy Policy
 
 ----
 
-Text: Replace this with the site's actual privacy policy before going live.
+Text: [{"content":{"text":"<p>Replace this with the site's actual privacy policy before going live.</p>"},"id":"620a4c18-bded-4ef6-b93d-6fedccf257f9","isHidden":false,"type":"text"}]
 
 ----
 
