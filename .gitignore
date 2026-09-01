@@ -4,6 +4,12 @@
 /vendor/
 /kirby/
 
+# Composer-managed Kirby plugins (installed into site/plugins/ by
+# getkirby/composer-installer) — restored by `composer install` like
+# vendor/kirby above. Custom, hand-written plugins in site/plugins/ are
+# not covered by this and should be committed normally.
+/site/plugins/kirby-icon-field/
+
 # JS dependencies and build output
 # ----------------------------------
 

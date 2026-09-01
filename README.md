@@ -90,6 +90,15 @@ Everything else — the Tailwind setup, header/footer snippets, `.gitignore`, an
 
 When this base itself improves (a new convention, a fixed gotcha, a better default snippet), consider whether the change belongs here so future clones benefit too.
 
+## Footer defaults
+
+Every site built from this base needs the same footer boilerplate — company info, social links, and privacy/cookie policy links — so it's wired in by default instead of being rebuilt per project:
+
+- **Panel → Site Settings → Footer tab** (`site/blueprints/site.yml`) holds company name/address/phone/email, a repeatable social links structure (icon + label + URL), and page pickers for the privacy and cookie policy pages.
+- `content/privacy-policy/` and `content/cookie-policy/` are placeholder pages (unlisted, so they don't appear in the main nav) — replace their text with the real policies per project, and pick them in the Footer tab's page fields so the links appear.
+- `site/snippets/footer.php` renders all of the above and degrades cleanly when a field is empty (e.g. no social links yet → nothing renders in that row).
+- Social icons use [`tobimori/kirby-icon-field`](https://github.com/tobimori/kirby-icon-field) (installed via Composer, `type: icon` in the blueprint), reading SVGs from `assets/icons/` (tracked in git, unlike `assets/css`/`assets/js`). A starter set of common platforms ships in that folder (Facebook, Instagram, X, LinkedIn, YouTube, TikTok, WhatsApp, Pinterest) — drop in more `.svg` files there as needed and they show up in the field's picker automatically.
+
 ## Multi-language support
 
 This base ships single-language by default, but is multi-language-ready: `site/snippets/language-switcher.php` renders nothing unless Kirby's multi-language mode is on, so it's already wired into `header.php` (desktop nav and mobile menu) with zero visual effect today.
@@ -199,12 +208,13 @@ This will:
 ## Project structure
 
 ```
-content/        ← pages and uploaded files
+content/        ← pages and uploaded files (includes privacy-policy/, cookie-policy/ placeholders)
 src/            ← Tailwind CSS + JS source (compiles to assets/)
+assets/icons/   ← social icon SVGs for the icon field (tracked in git)
 site/
-  blueprints/   ← Panel field definitions
+  blueprints/   ← Panel field definitions (site.yml has the Footer tab)
   config/       ← config.php (email, SMTP, plugin settings)
-  plugins/      ← custom and third-party plugins
+  plugins/      ← custom and third-party plugins (composer-managed ones are gitignored)
   templates/    ← PHP templates
   snippets/     ← reusable template partials (header, footer)
 ```

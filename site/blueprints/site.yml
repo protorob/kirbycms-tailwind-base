@@ -1,5 +1,76 @@
 title: Site
 
-sections:
-  pages:
-    type: pages
+tabs:
+  content:
+    label: Content
+    sections:
+      pages:
+        type: pages
+        sortable: true
+
+  companyInfo:
+    label: Company information
+    fields:
+      companyHeadline:
+        type: headline
+        label: Company information
+
+      companyName:
+        label: Company name
+        type: text
+
+      companyAddress:
+        label: Address
+        type: textarea
+        size: small
+
+      companyPhone:
+        label: Phone
+        type: text
+
+      email:
+        label: Email
+        type: email
+
+      legalHeadline:
+        type: headline
+        label: Legal pages
+
+      privacyPage:
+        label: Privacy policy page
+        type: pages
+        multiple: false
+
+      cookiePage:
+        label: Cookie policy page
+        type: pages
+        multiple: false
+
+      socialHeadline:
+        type: headline
+        label: Social links
+
+      social:
+        label: Social links
+        type: structure
+        fields:
+          icon:
+            label: Icon
+            type: icon
+            folder: assets/icons
+            max: 1
+          label:
+            label: Label
+            type: text
+            required: true
+          url:
+            label: URL
+            type: url
+            required: true
+        columns:
+          icon:
+            width: 1/6
+          label:
+            width: 2/6
+          url:
+            width: 3/6

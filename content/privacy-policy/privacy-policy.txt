@@ -1,0 +1,9 @@
+Title: Privacy Policy
+
+----
+
+Text: Replace this with the site's actual privacy policy before going live.
+
+----
+
+Uuid: hrrib8gazjygk6jb

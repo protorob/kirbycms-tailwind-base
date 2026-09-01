@@ -1,0 +1,9 @@
+Title: Cookie Policy
+
+----
+
+Text: Replace this with the site's actual cookie policy before going live.
+
+----
+
+Uuid: 8woargdrvxu6n0fn

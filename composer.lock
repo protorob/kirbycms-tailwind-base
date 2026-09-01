@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6db8685e13a90ba970efe11003b82eb",
+    "content-hash": "91a47ad816b90dbb877b35d5717cd90a",
     "packages": [
         {
             "name": "christian-riesen/base32",
@@ -1326,6 +1326,56 @@
                 }
             ],
             "time": "2026-06-08T20:24:16+00:00"
+        },
+        {
+            "name": "tobimori/kirby-icon-field",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tobimori/kirby-icon-field.git",
+                "reference": "cbfe48472ad4e90c586fd1f0c2100e543309e4f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tobimori/kirby-icon-field/zipball/cbfe48472ad4e90c586fd1f0c2100e543309e4f4",
+                "reference": "cbfe48472ad4e90c586fd1f0c2100e543309e4f4",
+                "shasum": ""
+            },
+            "require": {
+                "getkirby/composer-installer": "^1.2",
+                "php": ">=8.2.0"
+            },
+            "require-dev": {
+                "getkirby/cms": "^4.0.1"
+            },
+            "type": "kirby-plugin",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Möritz",
+                    "email": "tobias@moeritz.io",
+                    "homepage": "https://moeritz.io"
+                }
+            ],
+            "description": "A simple Icon field plugin for Kirby CMS",
+            "keywords": [
+                "kirby",
+                "kirby-plugin"
+            ],
+            "support": {
+                "issues": "https://github.com/tobimori/kirby-icon-field/issues",
+                "source": "https://github.com/tobimori/kirby-icon-field/tree/2.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/tobimori",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-07-03T12:24:42+00:00"
         }
     ],
     "packages-dev": [],
