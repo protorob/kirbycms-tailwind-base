@@ -14,8 +14,6 @@ PRESETS=(
   "pt|Português|pt_PT"
 )
 
-CONTENT_FILES=(content/site.txt content/home/home.txt content/error/error.txt)
-
 echo "Enable multi-language support for this project? [y/N]"
 read -r enable
 if [[ ! "$enable" =~ ^[Yy]$ ]]; then
@@ -23,8 +21,31 @@ if [[ ! "$enable" =~ ^[Yy]$ ]]; then
   exit 0
 fi
 
-if [[ ! -f content/home/home.txt ]]; then
-  echo "content/home/home.txt not found — content already looks multi-language, or this isn't a fresh clone. Aborting."
+# Failsafe: detect an already-multilingual site before touching anything.
+# Three independent signals, any one of which means "don't run this again":
+#   1. site/config/config.php already turns multi-language mode on
+#   2. site/languages/ already has at least one language file
+#   3. content already has at least one language-suffixed file (e.g. home.en.txt)
+already_multilang=0
+
+if [[ -f site/config/config.php ]] && grep -Eq "'languages'[[:space:]]*=>[[:space:]]*true" site/config/config.php; then
+  echo "site/config/config.php already sets 'languages' => true."
+  already_multilang=1
+fi
+
+if [[ -d site/languages ]] && find site/languages -maxdepth 1 -name '*.php' -print -quit | grep -q .; then
+  echo "site/languages/ already has language files."
+  already_multilang=1
+fi
+
+if find content -type f -regextype posix-extended -regex '.*\.[a-z]{2,3}\.txt$' -print -quit | grep -q .; then
+  echo "content/ already has language-suffixed files (e.g. home.en.txt)."
+  already_multilang=1
+fi
+
+if [[ $already_multilang -eq 1 ]]; then
+  echo "This site already looks multi-language — aborting to avoid corrupting existing content."
+  echo "This script is meant to run once, right after cloning, on a still-single-language site."
   exit 1
 fi
 
@@ -194,8 +215,15 @@ PHP
   echo "Created site/languages/${code}.php"
 done
 
-# content files: add a language-suffixed copy per selected language
-for f in "${CONTENT_FILES[@]}"; do
+# content files: add a language-suffixed copy per selected language.
+# Discovered dynamically (every .txt under content/, skipping the ephemeral
+# _changes/ Panel-autosave folder) instead of a hardcoded list, so this
+# covers whatever pages exist by the time this script runs — the base's own
+# defaults (site.txt, home.txt, error.txt, privacy-policy.txt,
+# cookie-policy.txt) plus any pages added on top of it. The already-multilang
+# check above guarantees every file found here is still single-language.
+migrated=0
+while IFS= read -r -d '' f; do
   dir=$(dirname "$f")
   base=$(basename "$f" .txt)
   for c in "${chosen[@]}"; do
@@ -203,8 +231,9 @@ for f in "${CONTENT_FILES[@]}"; do
     cp "$f" "$dir/${base}.${code}.txt"
   done
   rm "$f"
-done
-echo "Migrated content files to per-language copies (translate the non-default ones via the Panel)."
+  migrated=$((migrated + 1))
+done < <(find content -type f -name '*.txt' -not -path '*/_changes/*' -print0)
+echo "Migrated $migrated content file(s) to per-language copies (translate the non-default ones via the Panel)."
 
 echo
 echo "Done. Default language: $default_code. Run 'composer install && bun install' if you haven't, then 'composer start'."

@@ -127,9 +127,9 @@ To turn it on for a new project, run `./setup-languages.sh` right after cloning 
    - Reminds you to activate a license in the Panel's System view before going live.
 3. Create `site/config/config.php` with `'languages' => true` (plus the content-translator config from step 2, if set up) — skipped if the file already exists, in which case add the keys yourself.
 4. Create one `site/languages/{code}.php` file per selected language.
-5. Migrate `content/site.txt`, `content/home/home.txt`, and `content/error/error.txt` into per-language copies (e.g. `home.en.txt`, `home.es.txt`) — the non-default ones start as duplicates of the default and need translating via the Panel (or via content-translator, if installed).
+5. Migrate every un-suffixed `.txt` file under `content/` into per-language copies (e.g. `home.en.txt`, `home.es.txt`) — discovered dynamically at run time (`find content -name '*.txt'`), not a fixed list, so it covers whatever pages exist at the time: the base's own defaults (`site.txt`, `home.txt`, `error.txt`, `privacy-policy.txt`, `cookie-policy.txt`) plus anything you've added on top. The non-default language copies start as duplicates of the default and need translating via the Panel (or via content-translator, if installed).
 
-Only run it once, on a fresh clone — it expects the un-suffixed content filenames to still exist.
+**Only run it on a still-single-language site** — it's meant for right after cloning, before or after adding content, but before turning on multi-language mode some other way. Before touching anything, it checks for three signs that the site is already multi-language — `site/config/config.php` already has `'languages' => true`, `site/languages/` already has language files, or `content/` already has a language-suffixed file like `home.en.txt` — and aborts with no changes if any of them are true, since re-running it against an already-migrated site would silently orphan the existing per-language content files (the discovery step only picks up un-suffixed files, so a second run finds nothing to migrate — but the safety check exists in case that assumption is ever violated, e.g. an un-suffixed file added back manually after migration).
 
 ## Frontend build
 
