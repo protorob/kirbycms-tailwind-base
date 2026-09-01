@@ -1,4 +1,7 @@
-<?php $navItems = $site->children()->listed() ?>
+<?php
+$navItems = $site->children()->listed();
+$logo = $site->logo()->toFile();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,26 +15,34 @@
 <header id="site-header" class="border-b border-neutral-200">
   <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
 
-    <a href="<?= $site->url() ?>" class="font-semibold tracking-tight text-lg">
-      <?= $site->title() ?>
+    <a href="<?= $site->url() ?>" class="flex items-center font-semibold tracking-tight text-lg">
+      <?php if ($logo): ?>
+        <img src="<?= $logo->url() ?>" alt="<?= esc($site->title()) ?>" class="h-8 w-auto">
+      <?php else: ?>
+        <?= $site->title() ?>
+      <?php endif ?>
     </a>
 
     <div class="hidden sm:flex items-center gap-6">
-      <nav class="flex gap-6 text-sm">
+      <nav class="flex items-center gap-6 text-sm">
         <?php foreach ($navItems as $item): ?>
           <a href="<?= $item->url() ?>" class="hover:opacity-60 transition-opacity <?= $item->isActive() ? 'font-medium' : '' ?>">
             <?= $item->title() ?>
           </a>
         <?php endforeach ?>
+        <?php snippet('cta-button') ?>
       </nav>
       <?php snippet('language-switcher') ?>
     </div>
 
-    <button id="menu-toggle" class="sm:hidden p-2" aria-label="Toggle menu">
-      <span class="block w-5 h-px bg-current mb-1.5"></span>
-      <span class="block w-5 h-px bg-current mb-1.5"></span>
-      <span class="block w-5 h-px bg-current"></span>
-    </button>
+    <div class="flex items-center gap-3 sm:hidden">
+      <?php snippet('cta-button', ['class' => 'text-xs px-3 py-1.5']) ?>
+      <button id="menu-toggle" class="p-2" aria-label="Toggle menu">
+        <span class="block w-5 h-px bg-current mb-1.5"></span>
+        <span class="block w-5 h-px bg-current mb-1.5"></span>
+        <span class="block w-5 h-px bg-current"></span>
+      </button>
+    </div>
   </div>
 
   <nav id="mobile-menu" class="sm:hidden grid grid-rows-[0fr] opacity-0 -translate-y-1 pointer-events-none transition-all duration-200">

@@ -2,4 +2,12 @@ Title: Home
 
 ----
 
+Text:
+
+Welcome to the KirbyCMS + Tailwind v4 starter site. We suggest you to read through the (link: https://github.com/protorob/kirbycms-tailwind-base#kirbycms--tailwind--base-project text: README) in the github repo so you can have an idea on our very opinionated way to use KirbyCMS and how to activate multilanguage and other stuff.
+
+Have fun :)
+
+----
+
 Uuid: milipo7ogmvantjc

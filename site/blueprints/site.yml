@@ -8,12 +8,40 @@ tabs:
         type: pages
         sortable: true
 
+  header:
+    label: Header
+    fields:
+      ctaHeadline:
+        type: headline
+        label: Call to action
+
+      ctaIcon:
+        label: Icon
+        type: icon
+        folder: assets/icons
+        max: 1
+
+      ctaLabel:
+        label: Label
+        type: text
+
+      ctaUrl:
+        label: URL
+        type: url
+
   companyInfo:
     label: Company information
     fields:
       companyHeadline:
         type: headline
         label: Company information
+
+      logo:
+        label: Site logo
+        type: files
+        multiple: false
+        query: site.images
+        help: Shown in the header in place of the site title, if set.
 
       companyName:
         label: Company name

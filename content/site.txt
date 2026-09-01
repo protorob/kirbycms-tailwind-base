@@ -2,6 +2,22 @@ Title: Site Title
 
 ----
 
+Ctaicon: 
+
+----
+
+Ctalabel: Contact →
+
+----
+
+Ctaurl: https://robertobriceno.eu
+
+----
+
+Logo: 
+
+----
+
 Companyname: 
 
 ----

@@ -90,14 +90,15 @@ Everything else — the Tailwind setup, header/footer snippets, `.gitignore`, an
 
 When this base itself improves (a new convention, a fixed gotcha, a better default snippet), consider whether the change belongs here so future clones benefit too.
 
-## Footer defaults
+## Site panel defaults
 
-Every site built from this base needs the same footer boilerplate — company info, social links, and privacy/cookie policy links — so it's wired in by default instead of being rebuilt per project:
+Every site built from this base needs the same chrome — a header CTA, company info, social links, and privacy/cookie policy links — so it's wired in by default instead of being rebuilt per project. It all lives in `site/blueprints/site.yml`, under Panel → Site Settings:
 
-- **Panel → Site Settings → Footer tab** (`site/blueprints/site.yml`) holds company name/address/phone/email, a repeatable social links structure (icon + label + URL), and page pickers for the privacy and cookie policy pages.
-- `content/privacy-policy/` and `content/cookie-policy/` are placeholder pages (unlisted, so they don't appear in the main nav) — replace their text with the real policies per project, and pick them in the Footer tab's page fields so the links appear.
-- `site/snippets/footer.php` renders all of the above and degrades cleanly when a field is empty (e.g. no social links yet → nothing renders in that row).
-- Social icons use [`tobimori/kirby-icon-field`](https://github.com/tobimori/kirby-icon-field) (installed via Composer, `type: icon` in the blueprint), reading SVGs from `assets/icons/` (tracked in git, unlike `assets/css`/`assets/js`). A starter set of common platforms ships in that folder (Facebook, Instagram, X, LinkedIn, YouTube, TikTok, WhatsApp, Pinterest) — drop in more `.svg` files there as needed and they show up in the field's picker automatically.
+- **Header tab** — an icon/label/URL call-to-action button. Rendered by `site/snippets/cta-button.php`, called from `site/snippets/header.php` as the last item in the desktop nav and always visible next to the hamburger button on mobile (not tucked inside the collapsible menu). Renders nothing if the label or URL is empty.
+- **Company information tab** — a site logo upload (shown in the header in place of the text title, once set), company name/address/phone/email, a repeatable social links structure (icon + label + URL), and page pickers for the privacy and cookie policy pages.
+  - `content/privacy-policy/` and `content/cookie-policy/` are placeholder pages (unlisted, so they don't appear in the main nav) — replace their text with the real policies per project, and pick them in this tab's page fields so the footer links appear.
+- `site/snippets/footer.php` and `header.php` render all of the above and degrade cleanly when a field is empty (e.g. no logo yet → falls back to the text title; no social links yet → nothing renders in that row).
+- Icons (CTA and social links) use [`tobimori/kirby-icon-field`](https://github.com/tobimori/kirby-icon-field) (installed via Composer, `type: icon` in the blueprint), reading SVGs from `assets/icons/` (tracked in git, unlike `assets/css`/`assets/js`). A starter set of common platforms ships in that folder (Facebook, Instagram, X, LinkedIn, YouTube, TikTok, WhatsApp, Pinterest) — drop in more `.svg` files there as needed and they show up in the field's picker automatically.
 
 ## Multi-language support
 
