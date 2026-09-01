@@ -8,7 +8,7 @@ This base and the tools referenced from it are free to use during local developm
 
 - **[Kirby CMS](https://getkirby.com)** — free to develop with locally; a license per domain is required for a live/production site.
 - **[tobimori/kirby-seo](https://www.andkindness.com/seo)** — SEO plugin, not installed in this base by default (add per project as needed); same model, license required at go-live.
-- **[kirby.tools/content-translator](https://kirby.tools/content-translator)** — planned addition to `setup-languages.sh` (see [Multi-language support](#multi-language-support)); free to test locally, "pay only when you are ready to go live."
+- **[kirby.tools/content-translator](https://kirby.tools/content-translator)** — optional install offered by `setup-languages.sh` (see [Multi-language support](#multi-language-support)); free to test locally, "pay only when you are ready to go live."
 
 Budget for these licenses before launching a client site built on this base.
 
@@ -97,13 +97,17 @@ This base ships single-language by default, but is multi-language-ready: `site/s
 To turn it on for a new project, run `./setup-languages.sh` right after cloning (before customizing `content/`). It will:
 
 1. Ask which languages to install (a preset list of common ones, or custom `code:Name:locale` entries) and which is the default.
-2. Create `site/config/config.php` with `'languages' => true` (skipped if the file already exists — add the key yourself in that case).
-3. Create one `site/languages/{code}.php` file per selected language.
-4. Migrate `content/site.txt`, `content/home/home.txt`, and `content/error/error.txt` into per-language copies (e.g. `home.en.txt`, `home.es.txt`) — the non-default ones start as duplicates of the default and need translating via the Panel.
+2. If more than one language was selected, ask whether to also set up [kirby.tools/content-translator](https://kirby.tools/content-translator) for one-click page translation in the Panel (see [Licensing](#licensing) — free locally, paid license required once the site goes live). If yes:
+   - Runs `composer require johannschopplich/kirby-content-translator` (or prints the command if Composer isn't on `PATH` yet).
+   - Asks which provider to use — DeepL, AI via Kirby Copilot (OpenAI), or skip and configure later.
+   - Adds the provider config to `site/config/config.php`, reading the API key from an environment variable (`DEEPL_API_KEY` or `OPENAI_API_KEY`) rather than writing it into the file — `config.php` is committed to git, so the key itself must be set outside of it (shell env, host/server env config, etc).
+   - Adds the `content-translator` button to `site/blueprints/pages/default.yml`'s `buttons:` list (skipped with a manual instruction if that file already defines `buttons:`).
+   - Reminds you to activate a license in the Panel's System view before going live.
+3. Create `site/config/config.php` with `'languages' => true` (plus the content-translator config from step 2, if set up) — skipped if the file already exists, in which case add the keys yourself.
+4. Create one `site/languages/{code}.php` file per selected language.
+5. Migrate `content/site.txt`, `content/home/home.txt`, and `content/error/error.txt` into per-language copies (e.g. `home.en.txt`, `home.es.txt`) — the non-default ones start as duplicates of the default and need translating via the Panel (or via content-translator, if installed).
 
 Only run it once, on a fresh clone — it expects the un-suffixed content filenames to still exist.
-
-Planned: an option to also install [kirby.tools/content-translator](https://kirby.tools/content-translator) for one-click page translation in the Panel instead of manual copy/paste. See [Licensing](#licensing) — free locally, paid license required once the site goes live.
 
 ## Frontend build
 

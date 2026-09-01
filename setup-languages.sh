@@ -6,10 +6,12 @@ cd "$(dirname "$0")"
 
 PRESETS=(
   "en|English|en_US"
+  "it|Italiano|it_IT"
   "es|Español|es_ES"
-  "pt|Português|pt_PT"
   "fr|Français|fr_FR"
   "de|Deutsch|de_DE"
+  "nl|Nederlands|nl_NL"
+  "pt|Português|pt_PT"
 )
 
 CONTENT_FILES=(content/site.txt content/home/home.txt content/error/error.txt)
@@ -78,21 +80,93 @@ if [[ $found -eq 0 ]]; then
   exit 1
 fi
 
+# Optional: kirby.tools/content-translator for one-click Panel translation
+translator_config=""
+translator_env_hint=""
+setup_translator="n"
+if [[ ${#chosen[@]} -gt 1 ]]; then
+  echo
+  echo "Also set up kirby.tools/content-translator for one-click Panel translation?"
+  echo "Free to test locally; requires a paid license before going live (see README's Licensing section). [y/N]"
+  read -r setup_translator
+fi
+
+if [[ "$setup_translator" =~ ^[Yy]$ ]]; then
+  if command -v composer >/dev/null 2>&1; then
+    composer require johannschopplich/kirby-content-translator
+  else
+    echo "composer not found on PATH — once it's installed, run:"
+    echo "  composer require johannschopplich/kirby-content-translator"
+  fi
+
+  echo
+  echo "Translation provider:"
+  echo "  1) DeepL"
+  echo "  2) AI via Kirby Copilot (OpenAI)"
+  echo "  3) Skip — configure the provider later"
+  read -r -p "> " provider_choice
+
+  case "$provider_choice" in
+    1)
+      translator_config="    'johannschopplich.content-translator' => [
+        'DeepL' => [
+            'apiKey' => env('DEEPL_API_KEY'),
+        ],
+    ],"
+      translator_env_hint="DEEPL_API_KEY"
+      ;;
+    2)
+      translator_config="    'johannschopplich.copilot' => [
+        'provider' => 'openai',
+        'providers' => [
+            'openai' => [
+                'apiKey' => env('OPENAI_API_KEY'),
+            ],
+        ],
+    ],"
+      translator_env_hint="OPENAI_API_KEY"
+      ;;
+    *)
+      echo "Skipping provider config — add it to site/config/config.php later, see:"
+      echo "  https://kirby.tools/docs/content-translator/getting-started/installation"
+      ;;
+  esac
+
+  # wire the Panel button into the default page blueprint
+  if [[ -f site/blueprints/pages/default.yml ]] && ! grep -q '^buttons:' site/blueprints/pages/default.yml; then
+    printf 'buttons:\n  - open\n  - preview\n  - "-"\n  - settings\n  - content-translator\n  - languages\n  - status\n\n%s' \
+      "$(cat site/blueprints/pages/default.yml)" > site/blueprints/pages/default.yml
+    echo "Added the content-translator button to site/blueprints/pages/default.yml"
+  else
+    echo "site/blueprints/pages/default.yml already defines 'buttons:' — add 'content-translator' to that list yourself."
+  fi
+fi
+
 # site/config/config.php
 if [[ -f site/config/config.php ]]; then
   echo
-  echo "site/config/config.php already exists — not overwriting it."
-  echo "Add this yourself:  'languages' => true,"
+  echo "site/config/config.php already exists — not overwriting it. Add this yourself:"
+  echo "  'languages' => true,"
+  if [[ -n "$translator_config" ]]; then
+    echo "$translator_config"
+  fi
 else
   mkdir -p site/config
-  cat > site/config/config.php <<'PHP'
-<?php
-
-return [
-    'languages' => true,
-];
-PHP
+  {
+    echo '<?php'
+    echo
+    echo 'return ['
+    echo "    'languages' => true,"
+    if [[ -n "$translator_config" ]]; then
+      echo "$translator_config"
+    fi
+    echo '];'
+  } > site/config/config.php
   echo "Created site/config/config.php"
+fi
+
+if [[ -n "$translator_env_hint" ]]; then
+  echo "Set the $translator_env_hint environment variable before using translation (never commit the key — config.php is tracked in git)."
 fi
 
 # site/languages/{code}.php
@@ -134,3 +208,6 @@ echo "Migrated content files to per-language copies (translate the non-default o
 
 echo
 echo "Done. Default language: $default_code. Run 'composer install && bun install' if you haven't, then 'composer start'."
+if [[ "$setup_translator" =~ ^[Yy]$ ]]; then
+  echo "content-translator is free to use locally. Activate a license in the Panel's System view before going live."
+fi
