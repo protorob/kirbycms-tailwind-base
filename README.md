@@ -1,4 +1,4 @@
-# adaltavoce — Kirby base project
+# KirbyCMS + Tailwind  base project
 
 A Kirby CMS base built on [Kirby Plainkit](https://github.com/getkirby/plainkit) + Tailwind CSS v4, managed with Composer. This repo has no client-specific content — it's meant to be cloned as the starting point for new sites. See [Starting a new project from this base](#starting-a-new-project-from-this-base) below.
 

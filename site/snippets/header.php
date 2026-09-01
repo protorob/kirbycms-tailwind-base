@@ -31,13 +31,15 @@
     </button>
   </div>
 
-  <nav id="mobile-menu" class="sm:hidden border-t border-neutral-200 opacity-0 -translate-y-1 pointer-events-none transition-all duration-200">
-    <div class="px-4 py-4 flex flex-col gap-4 text-sm">
-      <?php foreach ($navItems as $item): ?>
-        <a href="<?= $item->url() ?>" class="<?= $item->isActive() ? 'font-medium' : '' ?>">
-          <?= $item->title() ?>
-        </a>
-      <?php endforeach ?>
+  <nav id="mobile-menu" class="sm:hidden grid grid-rows-[0fr] opacity-0 -translate-y-1 pointer-events-none transition-all duration-200">
+    <div class="overflow-hidden">
+      <div class="border-t border-neutral-200 px-4 py-4 flex flex-col gap-4 text-sm">
+        <?php foreach ($navItems as $item): ?>
+          <a href="<?= $item->url() ?>" class="<?= $item->isActive() ? 'font-medium' : '' ?>">
+            <?= $item->title() ?>
+          </a>
+        <?php endforeach ?>
+      </div>
     </div>
   </nav>
 </header>

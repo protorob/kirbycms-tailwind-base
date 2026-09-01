@@ -7,6 +7,8 @@ const mobileMenu = document.getElementById('mobile-menu')
 if (toggle && mobileMenu) {
   toggle.addEventListener('click', () => {
     const isOpen = !mobileMenu.classList.contains('pointer-events-none')
+    mobileMenu.classList.toggle('grid-rows-[0fr]', isOpen)
+    mobileMenu.classList.toggle('grid-rows-[1fr]', !isOpen)
     mobileMenu.classList.toggle('opacity-0', isOpen)
     mobileMenu.classList.toggle('opacity-100', !isOpen)
     mobileMenu.classList.toggle('-translate-y-1', isOpen)
