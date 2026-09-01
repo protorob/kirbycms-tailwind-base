@@ -57,6 +57,11 @@ Icon
 /site/accounts/*
 !/site/accounts/index.html
 
+# Unpublished Panel changes
+# ---------------
+
+/content/_changes/
+
 # Sessions
 # ---------------
 

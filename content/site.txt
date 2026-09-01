@@ -26,7 +26,7 @@ Herodescription: A KirbyCMS Starter project for websites of any size, sensible d
 
 ----
 
-Herotextcolor: #555879
+Herotextcolor: #262626
 
 ----
 
@@ -36,8 +36,8 @@ Herobuttons:
   icon: ""
   label: Contact →
   url: https://robertobriceno.eu/
-  color: '#98a1bc'
-  textcolor: '#555879'
+  color: '#171717'
+  textcolor: '#ffffff'
 
 ----
 
@@ -61,7 +61,7 @@ Herooverlaycolor:
 
 ----
 
-Herobackgroundcolor: #f4ebd3
+Herobackgroundcolor: #e5e5e5
 
 ----
 
@@ -93,7 +93,13 @@ Cookiepage:
 
 ----
 
-Social: 
+Social:
+
+- 
+  icon: github.svg
+  label: Github
+  url: >
+    https://github.com/protorob/kirbycms-tailwind-base
 
 ----
 
