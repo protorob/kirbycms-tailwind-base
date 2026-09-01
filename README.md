@@ -72,12 +72,26 @@ Then, before the first commit:
 1. **`composer.json`** — update `name` (e.g. `clientname/site`) and `description`.
 2. **`package.json`** — no changes needed unless you rename scripts.
 3. **`site/blueprints/site.yml`** and the Panel's Site Settings — set the real site title once you log into the Panel.
-4. **`README.md`** — replace this file's title/intro with the new project's name and description; delete this section and `CLAUDE.md`'s "Starting a new project from this base" pointer if you don't want them carried over (optional — harmless to leave).
-5. Run `composer install && bun install` and start building pages, blueprints, and templates on top of `site/templates/default.php`.
+4. **Multi-language (optional)** — run `./setup-languages.sh` and follow the prompts to enable Kirby's multi-language mode and pick which languages to install. Skip it and the site stays single-language, matching this repo as-is. See "Multi-language support" below.
+5. **`README.md`** — replace this file's title/intro with the new project's name and description; delete this section and `CLAUDE.md`'s "Starting a new project from this base" pointer if you don't want them carried over (optional — harmless to leave).
+6. Run `composer install && bun install` and start building pages, blueprints, and templates on top of `site/templates/default.php`.
 
 Everything else — the Tailwind setup, header/footer snippets, `.gitignore`, and `deploy-example.sh` pattern — carries over as-is.
 
 When this base itself improves (a new convention, a fixed gotcha, a better default snippet), consider whether the change belongs here so future clones benefit too.
+
+## Multi-language support
+
+This base ships single-language by default, but is multi-language-ready: `site/snippets/language-switcher.php` renders nothing unless Kirby's multi-language mode is on, so it's already wired into `header.php` (desktop nav and mobile menu) with zero visual effect today.
+
+To turn it on for a new project, run `./setup-languages.sh` right after cloning (before customizing `content/`). It will:
+
+1. Ask which languages to install (a preset list of common ones, or custom `code:Name:locale` entries) and which is the default.
+2. Create `site/config/config.php` with `'languages' => true` (skipped if the file already exists — add the key yourself in that case).
+3. Create one `site/languages/{code}.php` file per selected language.
+4. Migrate `content/site.txt`, `content/home/home.txt`, and `content/error/error.txt` into per-language copies (e.g. `home.en.txt`, `home.es.txt`) — the non-default ones start as duplicates of the default and need translating via the Panel.
+
+Only run it once, on a fresh clone — it expects the un-suffixed content filenames to still exist.
 
 ## Frontend build
 

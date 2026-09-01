@@ -51,7 +51,8 @@ assets/             ← Vite build output (gitignored, rebuilt via bun run build
 - Layout container: `max-w-5xl mx-auto px-4` — used in header, footer, and `<main>` to keep everything aligned. Adjust the max-width per project as needed.
 - `header.php` and `footer.php` open/close the `<html>`/`<body>` tags (not split into separate `<head>` snippets) — every page template calls `snippet('header')` then `snippet('footer')`.
 - Nav is driven by `$site->children()->listed()` — add pages in the Panel and they appear automatically; no manual nav config.
-- No SEO plugin, no email config, no custom blueprints beyond the Plainkit defaults yet — add these per project as needed (see kirby-fotoalbum for a reference implementation using `tobimori/kirby-seo` and SMTP email).
+- No SEO plugin, no email config, no custom blueprints beyond the Plainkit defaults yet — add these per project as needed (see kirby-fotoalbum for a reference implementation using `tobimori/kirby-seo` and SMTP email). Docs: https://www.andkindness.com/seo — install via `composer require tobimori/kirby-seo`; handles meta tags, XML sitemaps, robots/indexing, Schema.org JSON-LD, Google Search Console, panel SEO previews/audits.
+- Multi-language is opt-in via `./setup-languages.sh` (see README's "Multi-language support"), run once right after cloning. `site/snippets/language-switcher.php` is already wired into `header.php`'s desktop nav and mobile menu but renders nothing until multi-language mode is enabled, so the base stays single-language with no visual change until that script runs.
 
 ## Deploying
 

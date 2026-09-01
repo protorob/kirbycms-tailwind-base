@@ -16,13 +16,16 @@
       <?= $site->title() ?>
     </a>
 
-    <nav class="hidden sm:flex gap-6 text-sm">
-      <?php foreach ($navItems as $item): ?>
-        <a href="<?= $item->url() ?>" class="hover:opacity-60 transition-opacity <?= $item->isActive() ? 'font-medium' : '' ?>">
-          <?= $item->title() ?>
-        </a>
-      <?php endforeach ?>
-    </nav>
+    <div class="hidden sm:flex items-center gap-6">
+      <nav class="flex gap-6 text-sm">
+        <?php foreach ($navItems as $item): ?>
+          <a href="<?= $item->url() ?>" class="hover:opacity-60 transition-opacity <?= $item->isActive() ? 'font-medium' : '' ?>">
+            <?= $item->title() ?>
+          </a>
+        <?php endforeach ?>
+      </nav>
+      <?php snippet('language-switcher') ?>
+    </div>
 
     <button id="menu-toggle" class="sm:hidden p-2" aria-label="Toggle menu">
       <span class="block w-5 h-px bg-current mb-1.5"></span>
@@ -39,6 +42,7 @@
             <?= $item->title() ?>
           </a>
         <?php endforeach ?>
+        <?php snippet('language-switcher') ?>
       </div>
     </div>
   </nav>
