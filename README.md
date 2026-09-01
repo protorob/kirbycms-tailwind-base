@@ -2,6 +2,16 @@
 
 A Kirby CMS base built on [Kirby Plainkit](https://github.com/getkirby/plainkit) + Tailwind CSS v4, managed with Composer. This repo has no client-specific content — it's meant to be cloned as the starting point for new sites. See [Starting a new project from this base](#starting-a-new-project-from-this-base) below.
 
+## Licensing
+
+This base and the tools referenced from it are free to use during local development, but require a paid license once a site goes live:
+
+- **[Kirby CMS](https://getkirby.com)** — free to develop with locally; a license per domain is required for a live/production site.
+- **[tobimori/kirby-seo](https://www.andkindness.com/seo)** — SEO plugin, not installed in this base by default (add per project as needed); same model, license required at go-live.
+- **[kirby.tools/content-translator](https://kirby.tools/content-translator)** — planned addition to `setup-languages.sh` (see [Multi-language support](#multi-language-support)); free to test locally, "pay only when you are ready to go live."
+
+Budget for these licenses before launching a client site built on this base.
+
 ## Requirements
 
 - PHP 8.2+ with extensions: `mbstring`, `xml`, `gd`, `curl`, `zip`, `intl`
@@ -92,6 +102,8 @@ To turn it on for a new project, run `./setup-languages.sh` right after cloning 
 4. Migrate `content/site.txt`, `content/home/home.txt`, and `content/error/error.txt` into per-language copies (e.g. `home.en.txt`, `home.es.txt`) — the non-default ones start as duplicates of the default and need translating via the Panel.
 
 Only run it once, on a fresh clone — it expects the un-suffixed content filenames to still exist.
+
+Planned: an option to also install [kirby.tools/content-translator](https://kirby.tools/content-translator) for one-click page translation in the Panel instead of manual copy/paste. See [Licensing](#licensing) — free locally, paid license required once the site goes live.
 
 ## Frontend build
 
