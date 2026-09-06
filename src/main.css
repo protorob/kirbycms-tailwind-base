@@ -5,11 +5,27 @@
   --font-sans: "Inter", sans-serif;
 }
 
-body {
+/* Fallback for browsers without cross-document view transitions (below) —
+   scoped to <main> only, so the header/nav never fades between page loads. */
+main {
   animation: page-fade-in 0.4s ease;
 }
 
 @keyframes page-fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+/* Opt into native cross-document view transitions on same-origin navigation.
+   Chromium browsers only for now — Firefox/Safari ignore this at-rule and
+   just get the fallback fade above. */
+@view-transition {
+  navigation: auto;
+}
+
+/* Give the header a stable name so the browser treats it as a persistent
+   element across the transition (no fade) instead of cross-fading it along
+   with the rest of the page. */
+#site-header {
+  view-transition-name: site-header;
 }

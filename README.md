@@ -152,6 +152,15 @@ bun run build   # production build → assets/css/ and assets/js/
 - `site/snippets/header.php` / `site/snippets/footer.php` — shared page chrome, styled with Tailwind utility classes
 - `site/templates/default.php` — default page template
 
+## Page transitions
+
+Every navigation here is a normal full page load (Kirby renders server-side, there's no client-side router), so "page transitions" are done with CSS only — no JS, no new dependency:
+
+- **Fallback fade-in** — `main { animation: page-fade-in .4s ease }` in `src/main.css` fades in only the `<main>` content on load. It's deliberately scoped to `<main>`, not `body`: animating the whole `<body>` would make the header/nav fade in and flash on every page change too. `#site-header` isn't part of this animation, so it renders immediately and never flashes.
+- **Cross-document view transitions** — `@view-transition { navigation: auto; }` opts into the browser's native View Transitions API for same-origin navigations. Where supported, the browser cross-fades the whole old/new page automatically — a real fade-out-then-fade-in, not just the fade-in above. `#site-header` additionally gets `view-transition-name: site-header`, which tells the browser to treat it as a persistent element across the transition (matched by name between the outgoing and incoming page) instead of cross-fading it with everything else — since the header's markup is normally identical between pages, this reads as the header simply staying in place while only the content crossfades.
+  - **Browser support**: Chromium browsers (Chrome/Edge) only, as of writing. Firefox and Safari don't recognize `@view-transition` yet and silently ignore it — those browsers just get the fallback fade-in above (nav still doesn't flash, but no fade-out).
+- **Not done (yet)**: a JS page-transition library (e.g. [Swup](https://swup.js.org)) that intercepts internal link clicks, fetches the next page, and swaps only `<main>`'s content without a full reload — the header DOM node would never even reload. That would work identically in every browser (not just Chromium), but adds real complexity (handling back/forward navigation, re-running `main.js`'s mobile-menu logic after each swap, scroll restoration, updating `<title>`, etc.) that isn't justified yet. Revisit if cross-browser parity becomes a priority.
+
 ## Deploying to a live server
 
 A deploy script is included to push the site to a DreamHost VPS via SSH/rsync.
