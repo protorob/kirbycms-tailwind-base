@@ -16,6 +16,7 @@ Budget for these licenses before launching a client site built on this base.
 
 - PHP 8.2+ with extensions: `mbstring`, `xml`, `gd`, `curl`, `zip`, `intl`
 - [Composer](https://getcomposer.org)
+- [Node.js](https://nodejs.org) 20.19+ or 22.12+ (includes npm) — required by Vite
 
 ## Installing PHP (Ubuntu / WSL2)
 
@@ -43,9 +44,9 @@ sudo mv composer.phar /usr/local/bin/composer
 
 ```bash
 git clone <repo-url>
-cd adaltavoce
+cd <project-folder>
 composer install
-bun install
+npm install
 ```
 
 ## Run locally
@@ -57,12 +58,14 @@ In two separate terminals:
 composer start
 
 # Terminal 2 — CSS/JS watch mode
-bun run dev
+npm run dev
 ```
 
 Then open `http://localhost:8000` in your browser.
 
 The Kirby Panel is available at `http://localhost:8000/panel` — you will be prompted to create an admin account on first visit.
+
+Port 8000 already taken (e.g. by another site)? Set `PORT` to use a different one: `PORT=8001 composer start`, then open `http://localhost:8001`. This relies on shell variable expansion, so on Windows run it from WSL.
 
 ## Starting a new project from this base
 
@@ -84,7 +87,7 @@ Then, before the first commit:
 3. **`site/blueprints/site.yml`** and the Panel's Site Settings — set the real site title once you log into the Panel.
 4. **Multi-language (optional)** — run `./setup-languages.sh` and follow the prompts to enable Kirby's multi-language mode and pick which languages to install. Skip it and the site stays single-language, matching this repo as-is. See "Multi-language support" below.
 5. **`README.md`** — replace this file's title/intro with the new project's name and description; delete this section and `CLAUDE.md`'s "Starting a new project from this base" pointer if you don't want them carried over (optional — harmless to leave).
-6. Run `composer install && bun install` and start building pages, blueprints, and templates on top of `site/templates/default.php`.
+6. Run `composer install && npm install` and start building pages, blueprints, and templates on top of `site/templates/default.php`.
 
 Everything else — the Tailwind setup, header/footer snippets, `.gitignore`, and `deploy-example.sh` pattern — carries over as-is.
 
@@ -102,15 +105,24 @@ Every site built from this base needs the same chrome — a header CTA, company 
 - Icons (CTA and social links) use [`tobimori/kirby-icon-field`](https://github.com/tobimori/kirby-icon-field) (installed via Composer, `type: icon` in the blueprint), reading SVGs from `assets/icons/` (tracked in git, unlike `assets/css`/`assets/js`). A starter set of common platforms ships in that folder (Facebook, Instagram, X, LinkedIn, YouTube, TikTok, WhatsApp, Pinterest) — drop in more `.svg` files there as needed and they show up in the field's picker automatically.
   - The plugin caches its `assets/icons/` folder scan by default, keyed by the field's config (folder/sprite/include/exclude) rather than the folder's actual contents — so dropping in a new `.svg` won't show up in the Panel until that cache is cleared (delete `site/cache/<host>/tobimori/`) or invalidated some other way. `site/config/config.php` disables this cache (`'tobimori.icon-field' => ['cache' => false]`) so new icons always show up immediately — worth re-enabling (remove that config block) once a project's icon set has stabilized, since it does add a small perf cost on every Panel load of an icon field.
 
-## Homepage hero section
+### URL fields use Kirby's `link` field
 
-The homepage still uses the regular `default.yml`/`default.php` — there's no dedicated home blueprint or template. The hero banner is instead a "Homepage hero section" field group inside `site/blueprints/site.yml`'s Header tab, rendered by `site/snippets/hero.php`, which `default.php` includes only when `$page->isHomePage()` is true. Every other page ignores these fields entirely.
+`ctaUrl`, `heroButtons.url`, and `social.url` are all `type: link` (not `type: url`), restricted to `options: [url, email, tel, anchor]`. Kirby's plain `url` field only validates `http(s)://`/`ftp://` values, so it rejected `mailto:`/`tel:` links outright — the `link` field gives editors a type-aware picker (URL / Email / Tel / Anchor) and validates each type correctly. The stored value already comes back scheme-prefixed (`mailto:...`, `tel:...`, `https://...`, `#...`), so templates use it directly as `href` with no extra resolution step — just `esc($field, 'attr')` since it lands in an HTML attribute.
 
-- **Fields**: eyebrow, title, description, an overall hero text color, and a repeatable buttons structure (icon + label + URL + per-button background color + text color).
-- **Layout toggle**: "Full width" vs "Contained" (`heroFullWidth`) — contained shows the hero as a rounded, inset card matching the page's `max-w-5xl` container; full width bleeds it edge-to-edge with square corners, flush against the header.
+The `page`/`file` options are deliberately excluded here: those store an unresolved `page://uuid`/`file://uuid` reference rather than a ready-to-use href, which would need a small resolver added to `cta-button.php`/`hero.php`/`footer.php` before it's usable. Add them (and the resolver) if a future need for internal-page or file CTAs comes up.
+
+## Hero sections
+
+The hero banner's fields (eyebrow, title, description, buttons, background) live in one shared fragment, `site/blueprints/fields/hero.yml`, pulled into a blueprint via a `type: group` field with `extends: fields/hero`. Group fields splice their child fields into the parent form inline — no visual wrapper, no content nesting under the group's own name — so the same field names (`eyebrow`, `heroTitle`, `heroButtons`, etc.) are reused wherever the group appears. `site/snippets/hero.php` takes whichever model is passed in as `snippet('hero', ['model' => ...])` and reads all fields off that model, so the identical fragment works for both the site and any page.
+
+- **Homepage** — `site/blueprints/site.yml`'s Header tab includes the group unconditionally (`hero: extends: fields/hero`). `default.php` renders it via `snippet('hero', ['model' => $site])` whenever `$page->isHomePage()`.
+- **Any other page** — `site/blueprints/pages/default.yml` has a Hero tab with a `heroToggle` toggle field, then the same group with `when: heroToggle: true`. Kirby's `group` field type propagates a `when:` set on the group to every field inside it automatically, so the whole hero only shows once the toggle is on. `default.php` renders it via `snippet('hero', ['model' => $page])` when the toggle is on, and skips the plain `<h1>` page-title heading in that case (the hero's own title stands in for it, avoiding two `<h1>`s on one page). Any new page blueprint added later (services, portfolio, blog, etc.) should copy this Hero tab and toggle pattern.
+- The background-image field queries `model.images` rather than a hardcoded `site.images`/`page.images` — `model` is a binding Kirby always provides pointing at whichever model a blueprint query runs against (`ModelWithContent::query()`), so the one fragment scopes correctly to the site's own files or a specific page's own files depending on where it's used.
+- **Fields**: eyebrow, title, description, an overall hero text color, and a repeatable buttons structure (icon + label + link + per-button background color + text color). Button links use Kirby's `link` field restricted to `[url, email, tel, anchor]` — the stored value comes back scheme-prefixed (`mailto:...`, `tel:...`, `https://...`, `#...`), so `hero.php` uses it directly as `href` with `esc($field, 'attr')`. `page`/`file` options are excluded on purpose, since they store an unresolved `page://uuid`/`file://uuid` reference that would need a resolver first.
+- **Layout toggle**: "Full width" vs "Contained" (`heroFullWidth`) — contained shows the hero as a rounded, inset card; full width bleeds it edge-to-edge with square corners, flush against the header.
 - **Background**: a radio picks Image or Solid color; the relevant fields (image upload, "add color overlay" toggle + overlay color, or background color) appear conditionally via blueprint `when:` — each condition is a single exact-value match, since Kirby's `when` only supports "and" logic natively (no plugin needed here).
-- Color fields use Kirby's [color field](https://getkirby.com/docs/reference/panel/fields/color) with a shared set of swatches (a YAML anchor `&heroSwatches` at the top of `site.yml`) matching this base's default neutral palette — update those hex values once a project defines its own brand colors in `src/main.css`'s `@theme` block.
-- Renders nothing if eyebrow/title/description/buttons are all empty — a fresh clone's homepage looks exactly like any other default page until the hero fields are filled in.
+- Color fields use Kirby's [color field](https://getkirby.com/docs/reference/panel/fields/color) with a shared set of swatches (a YAML anchor `&heroSwatches` at the top of `fields/hero.yml`) matching this base's default neutral palette — update those hex values once a project defines its own brand colors in `src/main.css`'s `@theme` block.
+- Renders nothing if eyebrow/title/description/buttons are all empty — a page with the toggle on but no hero content shows nothing extra (and no `<h1>` at all, so fill in at least a title).
 - Colors are applied via inline `style` attributes (not Tailwind classes) since they're arbitrary values chosen at runtime in the Panel, not known at Tailwind's build time. Each dynamic value is escaped once with `esc($value, 'attr')` (the attribute-embedding context) — escaping with `'css'` first and `'attr'` again double-encodes and corrupts the style string.
 
 ## Multi-language support
@@ -136,15 +148,15 @@ To turn it on for a new project, run `./setup-languages.sh` right after cloning 
 
 `site/blueprints/pages/default.yml`'s `text` field is a `blocks` field (Kirby's visual block editor — text, heading, image, gallery, video, quote, list, table, line, markdown, code), not a plain textarea/KirbyText field. `site/templates/default.php` renders it with `$page->text()->toBlocks()->toHtml()`, wrapped in the same `.prose` container as before, so `@tailwindcss/typography` still styles whatever the blocks produce.
 
-This is the field editors see on any page using the default blueprint — including the homepage's own body content below the hero (the hero itself is unrelated, driven by its own fields on `$site`, see "Homepage hero section" above).
+This is the field editors see on any page using the default blueprint — including the homepage's own body content below the hero (the hero itself is unrelated, driven by its own fields on `$site`, see "Hero sections" above).
 
 ## Frontend build
 
 The frontend uses [Tailwind CSS v4](https://tailwindcss.com) via the `@tailwindcss/vite` plugin. Source files live in `src/` and compile to `assets/` (gitignored, rebuilt on every deploy).
 
 ```bash
-bun run dev     # watch mode, rebuilds on changes to src/, templates, snippets
-bun run build   # production build → assets/css/ and assets/js/
+npm run dev     # watch mode, rebuilds on changes to src/, templates, snippets
+npm run build   # production build → assets/css/ and assets/js/
 ```
 
 - `src/main.css` — Tailwind entry point, `@theme` customizations, custom CSS
@@ -216,7 +228,7 @@ mkdir -p ~/your-domain.com/site/cache ~/your-domain.com/site/sessions ~/your-dom
 ```
 
 This will:
-1. Run `bun run build` to compile CSS and JS
+1. Run `npm run build` to compile CSS and JS
 2. Upload all required files via rsync (only changed files are transferred)
 3. Run `composer install` on the server to build `vendor/` and `kirby/`
 4. Set correct write permissions on Kirby's data directories
@@ -241,11 +253,14 @@ content/        ← pages and uploaded files (includes privacy-policy/, cookie-p
 src/            ← Tailwind CSS + JS source (compiles to assets/)
 assets/icons/   ← social icon SVGs for the icon field (tracked in git)
 site/
-  blueprints/   ← Panel field definitions (site.yml has the Footer tab)
+  blueprints/
+    fields/     ← reusable field fragments (hero.yml), pulled in via `extends:`
+    pages/      ← page blueprints (default.yml has the Content + Hero tabs)
+    site.yml    ← Header/Company info tabs (site-wide hero, CTA, socials, legal pages)
   config/       ← config.php (email, SMTP, plugin settings)
   plugins/      ← custom and third-party plugins (composer-managed ones are gitignored)
   templates/    ← PHP templates
-  snippets/     ← reusable template partials (header, footer)
+  snippets/     ← reusable template partials (header, footer, hero, cta-button, language-switcher)
 ```
 
 ## Notes

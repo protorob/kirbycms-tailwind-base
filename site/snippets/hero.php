@@ -1,8 +1,12 @@
 <?php
-$eyebrow         = $site->eyebrow();
-$heroTitle       = $site->heroTitle();
-$heroDescription = $site->heroDescription();
-$heroButtons     = $site->heroButtons()->toStructure();
+// $model is passed explicitly by the caller: $site for the homepage's
+// site-wide hero, or $page for a per-page hero (see default.php).
+$model ??= $site;
+
+$eyebrow         = $model->eyebrow();
+$heroTitle       = $model->heroTitle();
+$heroDescription = $model->heroDescription();
+$heroButtons     = $model->heroButtons()->toStructure();
 
 if (
   $eyebrow->isEmpty() &&
@@ -13,31 +17,31 @@ if (
   return;
 }
 
-$fullWidth       = $site->heroFullWidth()->toBool();
-$backgroundType  = $site->heroBackgroundType()->or('image')->value();
-$backgroundImage = $site->heroBackgroundImage()->toFile();
-$hasOverlay      = $backgroundType === 'image' && $site->heroImageOverlay()->toBool();
+$fullWidth       = $model->heroFullWidth()->toBool();
+$backgroundType  = $model->heroBackgroundType()->or('image')->value();
+$backgroundImage = $model->heroBackgroundImage()->toFile();
+$hasOverlay      = $backgroundType === 'image' && $model->heroImageOverlay()->toBool();
 
 // Dynamic values are escaped once for the 'attr' context, since they all
 // land inside an HTML style="..." attribute — the browser HTML-decodes
 // the attribute before handing it to the CSS parser.
 $heroStyle = '';
-if ($backgroundType === 'color' && $site->heroBackgroundColor()->isNotEmpty()) {
-  $heroStyle = 'background-color: ' . esc($site->heroBackgroundColor(), 'attr') . ';';
+if ($backgroundType === 'color' && $model->heroBackgroundColor()->isNotEmpty()) {
+  $heroStyle = 'background-color: ' . esc($model->heroBackgroundColor(), 'attr') . ';';
 } elseif ($backgroundType === 'image' && $backgroundImage) {
   $heroStyle = "background-image: url('" . esc($backgroundImage->url(), 'attr') . "'); background-size: cover; background-position: center;";
 }
 
-$textStyle = $site->heroTextColor()->isNotEmpty()
-  ? 'color: ' . esc($site->heroTextColor(), 'attr') . ';'
+$textStyle = $model->heroTextColor()->isNotEmpty()
+  ? 'color: ' . esc($model->heroTextColor(), 'attr') . ';'
   : '';
 ?>
 <section class="<?= $fullWidth ? '' : 'max-w-6xl mx-auto px-4 pt-3' ?>">
   <div class="relative overflow-hidden <?= $fullWidth ? '' : 'rounded-xl' ?>" style="<?= $heroStyle ?>">
-    <?php if ($hasOverlay && $site->heroOverlayColor()->isNotEmpty()): ?>
-      <div class="absolute inset-0" style="background-color: <?= esc($site->heroOverlayColor(), 'attr') ?>;"></div>
+    <?php if ($hasOverlay && $model->heroOverlayColor()->isNotEmpty()): ?>
+      <div class="absolute inset-0" style="background-color: <?= esc($model->heroOverlayColor(), 'attr') ?>;"></div>
     <?php endif ?>
-      
+
     <div class="relative max-w-5xl mx-auto px-4 sm:px-12 py-10 sm:py-20 text-center" style="<?= $textStyle ?>">
       <?php if ($eyebrow->isNotEmpty()): ?>
         <p class="text-sm font-medium uppercase tracking-wide opacity-70"><?= $eyebrow->esc() ?></p>
@@ -58,7 +62,7 @@ $textStyle = $site->heroTextColor()->isNotEmpty()
             $btnColor     = $button->color()->or('#171717');
             $btnTextColor = $button->textColor()->or('#ffffff');
             ?>
-            <a href="<?= $button->url() ?>"
+            <a href="<?= esc($button->url(), 'attr') ?>"
                style="background-color: <?= esc($btnColor, 'attr') ?>; color: <?= esc($btnTextColor, 'attr') ?>;"
                class="inline-flex items-center gap-2 font-medium rounded-full px-5 py-2.5 hover:opacity-90 transition-opacity [&>svg]:h-4 [&>svg]:w-4 [&>svg]:fill-current">
               <?php if ($button->icon()->isNotEmpty()): ?>

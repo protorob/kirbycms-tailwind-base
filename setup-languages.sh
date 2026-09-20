@@ -236,7 +236,7 @@ done < <(find content -type f -name '*.txt' -not -path '*/_changes/*' -print0)
 echo "Migrated $migrated content file(s) to per-language copies (translate the non-default ones via the Panel)."
 
 echo
-echo "Done. Default language: $default_code. Run 'composer install && bun install' if you haven't, then 'composer start'."
+echo "Done. Default language: $default_code. Run 'composer install && npm install' if you haven't, then 'composer start'."
 if [[ "$setup_translator" =~ ^[Yy]$ ]]; then
   echo "content-translator is free to use locally. Activate a license in the Panel's System view before going live."
 fi

@@ -3,11 +3,13 @@
 <main class="flex-1 w-full">
 
   <?php if ($page->isHomePage()): ?>
-    <?php snippet('hero') ?>
+    <?php snippet('hero', ['model' => $site]) ?>
+  <?php elseif ($page->heroToggle()->toBool()): ?>
+    <?php snippet('hero', ['model' => $page]) ?>
   <?php endif ?>
 
   <div class="max-w-5xl mx-auto px-4 py-10">
-    <?php if (!$page->isHomePage()): ?>
+    <?php if (!$page->isHomePage() && !$page->heroToggle()->toBool()): ?>
       <h1 class="text-3xl font-semibold tracking-tight"><?= $page->title() ?></h1>
     <?php endif ?>
 

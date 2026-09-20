@@ -1,20 +1,38 @@
 title: Default Page
 
-columns:
-  main:
-    width: 2/3
-    sections:
-      fields:
-        type: fields
-        fields:
-          text:
-            type: blocks
-  sidebar:
-    width: 1/3
-    sections:
-      pages:
-        type: pages
-        template: default
-      files:
-        type: files
+tabs:
+  content:
+    label: Content
+    columns:
+      main:
+        width: 2/3
+        sections:
+          fields:
+            type: fields
+            fields:
+              text:
+                type: blocks
+      sidebar:
+        width: 1/3
+        sections:
+          pages:
+            type: pages
+            template: default
+          files:
+            type: files
 
+  hero:
+    label: Hero
+    fields:
+      heroToggle:
+        label: Show hero section
+        type: toggle
+        text:
+          - "Off"
+          - "On"
+        help: Ignored on the homepage — the homepage's hero is configured in Site Settings → Header.
+
+      hero:
+        extends: fields/hero
+        when:
+          heroToggle: true

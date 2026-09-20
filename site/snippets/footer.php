@@ -25,7 +25,7 @@ $legalPages = $site->legalPages()->toStructure();
       <?php if ($social->isNotEmpty()): ?>
         <div class="flex items-center gap-4">
           <?php foreach ($social as $link): ?>
-            <a href="<?= $link->url() ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= esc($link->label()) ?>" class="text-neutral-400 hover:text-neutral-800 transition-colors [&>svg]:h-5 [&>svg]:w-5 [&>svg]:fill-current">
+            <a href="<?= esc($link->url(), 'attr') ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= esc($link->label()) ?>" class="text-neutral-400 hover:text-neutral-800 transition-colors [&>svg]:h-5 [&>svg]:w-5 [&>svg]:fill-current">
               <?php if ($link->icon()->isNotEmpty()): ?>
                 <?= svg('/assets/icons/' . $link->icon()) ?>
               <?php endif ?>

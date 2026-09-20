@@ -1,0 +1,9 @@
+Title: Cookie Policy
+
+----
+
+Text: [{"content":{"text":"<p>Replace this with the site's actual cookie policy before going live.</p>"},"id":"657fe236-c1bb-4d02-a9c0-67b733bdd9ac","isHidden":false,"type":"text"}]
+
+----
+
+Uuid: vljnwdpucahzdmpo

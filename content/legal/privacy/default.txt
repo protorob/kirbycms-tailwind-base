@@ -1,0 +1,9 @@
+Title: Privacy
+
+----
+
+Text: [{"content":{"text":"<p>Replace this with the site's actual privacy policy before going live.</p>"},"id":"28564985-a718-4ccf-a3f7-a0df728dc18b","isHidden":false,"type":"text"}]
+
+----
+
+Uuid: dlgmmn6isvcyb2gw
