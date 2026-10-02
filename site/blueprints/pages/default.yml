@@ -20,6 +20,26 @@ tabs:
             template: default
           files:
             type: files
+          cardFields:
+            type: fields
+            fields:
+              pageExcerpt:
+                label: Page excerpt
+                type: textarea
+                buttons: false
+                size: small
+                help: Shown under the title when this page appears in a Child pages block.
+              cardImage:
+                label: Card image
+                type: files
+                max: 1
+                query: page.images
+                translate: false
+                layout: cards
+                image:
+                  ratio: 6/4
+                  cover: true
+                help: Used by the Child pages block. Falls back to the hero background image.
 
   hero:
     label: Hero
@@ -36,3 +56,37 @@ tabs:
         extends: fields/hero
         when:
           heroToggle: true
+
+  seo:
+    label: SEO
+    fields:
+      customTitle:
+        label: SEO title
+        type: text
+        help: Replaces the page title in the browser tab and in search/social previews. Leave empty to use the page title.
+
+      description:
+        label: Meta description
+        type: textarea
+        buttons: false
+        size: small
+        maxlength: 160
+        help: Shown in search results and social previews. Falls back to the site-wide description in Site → SEO.
+
+      thumbnail:
+        label: Social sharing image
+        type: files
+        multiple: false
+        query: page.images
+        translate: false
+        help: Ideally 1200×630. Falls back to the site-wide image in Site → SEO.
+
+      robots:
+        label: Search engines
+        type: select
+        translate: false
+        placeholder: Index this page (default)
+        options:
+          noindex: Hide from search results (noindex)
+          "noindex, nofollow": Hide from search results and don't follow links (noindex, nofollow)
+        help: Hidden pages are also left out of sitemap.xml.

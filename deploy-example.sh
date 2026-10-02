@@ -19,6 +19,9 @@
 # NOTE: vendor/ and kirby/ are excluded from the upload. Composer runs on
 # the server after each deploy to install dependencies for the server's
 # PHP version. See README for first-time server setup instructions.
+#
+# '/*.sh' keeps every root-level script out of the web root — deploy.sh and
+# deploy-ftp.sh hold credentials and would otherwise be downloadable.
 # ---------------------------------------------------------------------------
 
 SSH_USER="your-user"                     # SSH username on the server
@@ -42,9 +45,12 @@ rsync -avz --progress \
   --exclude='src/' \
   --exclude='vendor/' \
   --exclude='kirby/' \
-  --exclude='deploy.sh' \
-  --exclude='deploy-example.sh' \
+  --exclude='/*.sh' \
+  --exclude='.env' \
+  --exclude='.env.example' \
   --exclude='README.md' \
+  --exclude='CLAUDE.md' \
+  --exclude='.claude' \
   --exclude='site/accounts' \
   --exclude='site/sessions' \
   --exclude='site/cache' \

@@ -1,0 +1,119 @@
+#!/bin/bash
+
+# ---------------------------------------------------------------------------
+# FTP DEPLOYMENT SCRIPT — EXAMPLE / TEMPLATE
+#
+# For servers reachable only via FTP (no SSH, no rsync, no Composer on the
+# server). Uses lftp to mirror the project up to the server.
+#
+# 1. Copy this file to deploy-ftp.sh:
+#       cp deploy-ftp-example.sh deploy-ftp.sh
+#
+# 2. Fill in your server details below.
+#
+# 3. Make it executable:
+#       chmod +x deploy-ftp.sh
+#
+# 4. Run it from the project root:
+#       ./deploy-ftp.sh                  # actually upload
+#       ./deploy-ftp.sh --dry-run        # preview what would be uploaded
+#       ./deploy-ftp.sh --with-accounts  # also upload site/accounts/
+#       ./deploy-ftp.sh --with-env       # also upload .env (API keys)
+#     (options can be combined, e.g. --with-env --dry-run)
+#
+# deploy-ftp.sh is gitignored — your credentials will never be committed.
+#
+# Requires lftp locally (sudo apt install lftp / brew install lftp).
+#
+# NOTE: unlike deploy.sh, vendor/ and kirby/ ARE uploaded, because Composer
+# can't run on the server. Dependencies are installed locally with
+# `composer install --no-dev` first, so they must match the server's PHP
+# version (see "php" in composer.json).
+#
+# Only files newer locally than on the server are uploaded (--only-newer),
+# so content edited in the live Panel is not overwritten by older local
+# copies. Nothing is ever deleted on the server.
+#
+# .env is excluded by default so a local key never overwrites the server's;
+# with no SSH there's no other way to create it on the server, so use
+# --with-env for the first deploy (and whenever the keys change).
+# ---------------------------------------------------------------------------
+
+FTP_USER="your-user"                    # FTP username
+FTP_PASS=""                             # FTP password — leave empty to be prompted
+FTP_HOST="ftp.your-server.com"          # FTP hostname or IP
+FTP_PORT=21                             # FTP port (usually 21)
+FTP_TLS=true                            # true = require FTPS (explicit TLS), false = plain FTP
+FTP_VERIFY_CERT=true                    # set false if the host's TLS certificate doesn't match FTP_HOST
+REMOTE_PATH="/public_html"              # site root as seen from the FTP login (often not the absolute server path)
+# ---------------------------------------------------------------------------
+
+set -e
+
+DRY_RUN=""
+ACCOUNTS_EXCLUDE="--exclude '^site/accounts/'"
+ENV_EXCLUDE="--exclude '^\.env$'"
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run)
+      DRY_RUN="--dry-run"
+      echo "→ Dry run — nothing will be uploaded."
+      ;;
+    --with-accounts)
+      ACCOUNTS_EXCLUDE=""
+      echo "→ Including site/accounts/ in the upload."
+      ;;
+    --with-env)
+      ENV_EXCLUDE=""
+      echo "→ Including .env in the upload."
+      ;;
+    *)
+      echo "Unknown option: $arg" >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [ -z "${FTP_PASS}" ]; then
+  read -r -s -p "FTP password for ${FTP_USER}@${FTP_HOST}: " FTP_PASS
+  echo
+fi
+
+echo "→ Building assets..."
+npm run build
+
+echo "→ Installing production dependencies locally (vendor/, kirby/, site/plugins/)..."
+composer install --no-dev --optimize-autoloader --no-interaction
+
+echo "→ Deploying to ftp://${FTP_USER}@${FTP_HOST}:${FTP_PORT}${REMOTE_PATH}"
+export LFTP_PASSWORD="${FTP_PASS}"
+lftp --env-password -u "${FTP_USER}" -p "${FTP_PORT}" "${FTP_HOST}" <<LFTP
+set ftp:ssl-allow ${FTP_TLS}
+set ftp:ssl-force ${FTP_TLS}
+set ftp:ssl-protect-data ${FTP_TLS}
+set ssl:verify-certificate ${FTP_VERIFY_CERT}
+set net:max-retries 2
+set net:timeout 20
+mirror --reverse --only-newer --no-perms --parallel=4 --verbose ${DRY_RUN} \
+  --exclude '^\.git/' \
+  --exclude '^\.gitignore$' \
+  --exclude '^\.claude/' \
+  --exclude '^\.vscode/' \
+  --exclude '^\.idea/' \
+  --exclude '(^|/)\.DS_Store$' \
+  --exclude '^node_modules/' \
+  --exclude '^src/' \
+  --exclude '^media/' \
+  ${ACCOUNTS_EXCLUDE} \
+  ${ENV_EXCLUDE} \
+  --exclude '^\.env\.example$' \
+  --exclude '^site/sessions/' \
+  --exclude '^site/cache/' \
+  --exclude '^[^/]*\.sh$' \
+  --exclude '^README\.md$' \
+  --exclude '^CLAUDE\.md$' \
+  ./ "${REMOTE_PATH}/"
+bye
+LFTP
+
+echo "✓ Deploy complete."

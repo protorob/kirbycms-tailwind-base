@@ -112,3 +112,26 @@ tabs:
             width: 2/6
           url:
             width: 3/6
+
+  seo:
+    label: SEO
+    fields:
+      seoHeadline:
+        type: headline
+        label: Site-wide SEO defaults
+        help: Used by every page that doesn't set its own value in its SEO tab.
+
+      description:
+        label: Default meta description
+        type: textarea
+        buttons: false
+        size: small
+        maxlength: 160
+
+      thumbnail:
+        label: Default social sharing image
+        type: files
+        multiple: false
+        query: site.images
+        translate: false
+        help: Ideally 1200×630.

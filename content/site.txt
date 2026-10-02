@@ -14,15 +14,15 @@ Ctaurl: https://robertobriceno.eu
 
 ----
 
-Eyebrow: For lazy developers
+Eyebrow: Kirby 5 + Tailwind CSS v4 starter
 
 ----
 
-Herotitle: The only KirbyCMS Starter You'll Ever need for real.
+Herotitle: Start client sites with the boring parts already done.
 
 ----
 
-Herodescription: A KirbyCMS Starter project for websites of any size, sensible defaults and very opinionated. You'll have options for making it i18n ready, Add Deepl automatic content translation with (link: https://kirby.tools/content-translator text: Kirby Content Translator) and SEO features from (link: https://www.andkindness.com/seo text: SEO for Kirby CMS) from andkindness.
+Herodescription: An opinionated Kirby starter that already has the header, footer, hero sections, SEO, card grids and deploy scripts set up. Clone it, run two commands, and spend your time on the parts that are specific to each client.
 
 ----
 
@@ -34,8 +34,9 @@ Herobuttons:
 
 - 
   icon: ""
-  label: Contact →
-  url: https://robertobriceno.eu/
+  label: View on GitHub
+  url: >
+    https://github.com/protorob/kirbycms-tailwind-base
   color: '#171717'
   textcolor: '#ffffff'
 
@@ -106,16 +107,8 @@ Social:
 
 ----
 
-Privacypage: 
+Description: 
 
 ----
 
-Cookiepage: 
-
-----
-
-Heropaddingx: 
-
-----
-
-Heropaddingy: 
+Thumbnail: 

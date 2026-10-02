@@ -187,7 +187,7 @@ else
 fi
 
 if [[ -n "$translator_env_hint" ]]; then
-  echo "Set the $translator_env_hint environment variable before using translation (never commit the key — config.php is tracked in git)."
+  echo "Add $translator_env_hint=... to .env before using translation (never put the key in config.php — it is tracked in git)."
 fi
 
 # site/languages/{code}.php

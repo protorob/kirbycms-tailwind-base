@@ -9,6 +9,8 @@
 # vendor/kirby above. Custom, hand-written plugins in site/plugins/ are
 # not covered by this and should be committed normally.
 /site/plugins/kirby-icon-field/
+/site/plugins/kirby-helpers/
+/site/plugins/kirby-content-translator/
 
 # JS dependencies and build output
 # ----------------------------------
@@ -77,3 +79,9 @@ Icon
 # ---------------
 
 /deploy.sh
+/deploy-ftp.sh
+
+# Environment secrets (API keys) — see .env.example
+# ---------------
+
+/.env

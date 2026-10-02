@@ -2,6 +2,12 @@
 
 <main class="flex-1 w-full">
 
+  <?php if ($page->parent()): ?>
+    <div class="max-w-5xl mx-auto px-4 pt-6">
+      <?php snippet('breadcrumbs') ?>
+    </div>
+  <?php endif ?>
+
   <?php if ($page->isHomePage()): ?>
     <?php snippet('hero', ['model' => $site]) ?>
   <?php elseif ($page->heroToggle()->toBool()): ?>

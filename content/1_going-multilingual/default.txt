@@ -1,0 +1,81 @@
+Title: Going multilingual
+
+----
+
+Text: [{"content":{"text":"<p>This starter ships as a single-language site. Multi-language support is already wired in (a language dropdown in the desktop header, a language list in the mobile menu, <code>hreflang</code> tags and a per-language <code>&lt;html lang&gt;</code>), but none of it shows up until you turn on Kirby's multi-language mode. This page walks through how to do that, and how to add one-click DeepL translation in the Panel.</p>"},"id":"2b7005b8-072d-d508-4ee8-da13ae90df35","isHidden":false,"type":"text"},{"content":{"level":"h2","text":"1. Run the setup script"},"id":"7a86b742-63bf-a403-8642-76dc61a8c6d2","isHidden":false,"type":"heading"},{"content":{"text":"<p>From the project root:</p>"},"id":"e61eabf2-ab95-5122-44e7-7e8e1add5f7c","isHidden":false,"type":"text"},{"content":{"code":"./setup-languages.sh","language":"bash"},"id":"87f7078c-6dc1-9184-3a85-68faf92a0c84","isHidden":false,"type":"code"},{"content":{"text":"<p>It asks which languages to install (pick from a preset list or enter custom <code>code:Name:locale</code> entries) and which one is the default. Then it:</p>"},"id":"48b74a25-6047-060e-eaeb-979e075017af","isHidden":false,"type":"text"},{"content":{"text":"<ul><li><p>creates one <code>site/languages/{code}.php</code> file per language;</p></li><li><p>copies every content file into one copy per language (<code>home.txt</code> becomes <code>home.en.txt</code>, <code>home.it.txt</code>, and so on). It finds the files at run time, so you can run it before or after adding content. The extra language copies start as duplicates of the default and still need translating.</p></li></ul>"},"id":"dd9c5942-573b-3448-125c-28207f2b477d","isHidden":false,"type":"list"},{"content":{"text":"<p>The script is meant to run <strong>once</strong>. If the site is already multilingual it stops without changing anything.</p>"},"id":"c6593589-1242-77ce-1af7-1f7315f24b00","isHidden":false,"type":"text"},{"content":{"level":"h2","text":"2. Turn on multi-language mode in config.php"},"id":"a8efa537-f43c-e199-e59a-e78e46f8ded8","isHidden":false,"type":"heading"},{"content":{"text":"<p><code>site/config/config.php</code> already exists in this starter, so the script doesn't overwrite it. It prints the lines to add instead. At minimum, add this inside the <code>return [ ... ]</code> array:</p>"},"id":"e23128fe-241b-0517-d855-628488e9f19b","isHidden":false,"type":"text"},{"content":{"code":"'languages' => true,","language":"php"},"id":"b2aacfa1-afa5-0b52-c873-888ca7b86576","isHidden":false,"type":"code"},{"content":{"text":"<p>Reload the site and the language dropdown appears in the header.</p>"},"id":"48d2f23a-cc7c-4cdb-f798-13c3b5c51e8c","isHidden":false,"type":"text"},{"content":{"level":"h2","text":"3. Optional: DeepL translation in the Panel"},"id":"9503a480-9261-2686-0662-43126eadde1a","isHidden":false,"type":"heading"},{"content":{"text":"<p>If you pick two or more languages, the script offers to install <a href=\"https://kirby.tools/content-translator\">Kirby Content Translator</a>. It adds a button to the page editor that translates a whole page from the default language with DeepL (or OpenAI via Kirby Copilot). It's free to use locally, but needs a paid license before the site goes live.</p>"},"id":"9bd4339b-a008-92ab-41bd-efcb284d33e6","isHidden":false,"type":"text"},{"content":{"text":"<p>Choosing DeepL makes the script:</p>"},"id":"85a829a7-06f7-42d6-e88f-f4f1da707f7f","isHidden":false,"type":"text"},{"content":{"text":"<ul><li><p>run <code>composer require johannschopplich/kirby-content-translator</code>;</p></li><li><p>add the <code>content-translator</code> button to <code>site/blueprints/pages/default.yml</code>;</p></li><li><p>print the config block below. Add it to <code>config.php</code> next to <code>'languages' =&gt; true</code>.</p></li></ul>"},"id":"a0670c67-8598-e952-66f1-dcedb1b2f660","isHidden":false,"type":"list"},{"content":{"code":"'johannschopplich.content-translator' => [\n    'DeepL' => [\n        'apiKey' => env('DEEPL_API_KEY'),\n    ],\n],","language":"php"},"id":"be6d1481-6e9c-bbbb-a504-1dcdcae63a7b","isHidden":false,"type":"code"},{"content":{"text":"<p>Get a key from a <a href=\"https://www.deepl.com/pro-api\">DeepL API</a> account. The free plan covers 500,000 characters a month, which is plenty for most small sites.</p>"},"id":"ae8c73c0-35e2-a34e-733e-ade2dbef903a","isHidden":false,"type":"text"},{"content":{"level":"h2","text":"4. Keep the key in .env, never in config.php"},"id":"ec92b77b-8558-bed2-da93-ebd8875ee8a0","isHidden":false,"type":"heading"},{"content":{"text":"<p><code>config.php</code> is committed to git, so the key itself goes in a <code>.env</code> file in the project root. <code>.env</code> is gitignored; <code>.env.example</code> is the committed template:</p>"},"id":"37540e69-603e-0c92-03dd-52251423e936","isHidden":false,"type":"text"},{"content":{"code":"cp .env.example .env\n# then edit .env:\nDEEPL_API_KEY=your-key-here","language":"bash"},"id":"8c03196e-22fe-9af2-eb59-06eae3ad2350","isHidden":false,"type":"code"},{"content":{"text":"<p><code>config.php</code> loads <code>.env</code> with <code>kirby-helpers</code> (<code>Env::load()</code>) before returning its options, which is what makes <code>env('DEEPL_API_KEY')</code> work. If there's no <code>.env</code>, the site still runs and <code>env()</code> just returns <code>null</code>.</p>"},"id":"cb5919a2-e207-1149-c77a-9f0e86415fda","isHidden":false,"type":"text"},{"content":{"text":"<ul><li><p><strong>On the server:</strong> both deploy scripts skip <code>.env</code>, so a local key never overwrites the live one. With the SSH deploy, create <code>.env</code> on the server by hand once (next to <code>index.php</code>). With the FTP deploy, run <code>./deploy-ftp.sh --with-env</code>.</p></li><li><p><strong>Web access:</strong> Kirby's <code>.htaccess</code> blocks dotfiles on Apache. On nginx, add <code>location ~ /\\. { deny all; }</code>. The local dev server (<code>composer start</code>) <em>does</em> serve <code>/.env</code>, so don't expose it beyond your machine.</p></li></ul>"},"id":"d4df7d20-fd6c-7b60-271e-a71587a1460b","isHidden":false,"type":"list"},{"content":{"level":"h2","text":"5. Translate your content"},"id":"9be13527-9ef5-c32c-fec5-616971e3d270","isHidden":false,"type":"heading"},{"content":{"text":"<p>In the Panel, switch language with the selector at the top of any page, then translate by hand or click <strong>Content Translator</strong>. Remember to set a translated URL slug for each page as well. Before going live, activate the Content Translator license in the Panel's System view.</p>"},"id":"1be64af0-fb60-600a-7597-32667fa4f1cc","isHidden":false,"type":"text"}]
+
+----
+
+Pageexcerpt: Turn on Kirby's multi-language mode and add one-click DeepL translation, with the API key kept safely in .env.
+
+----
+
+Cardimage: 
+
+----
+
+Herotoggle: false
+
+----
+
+Eyebrow: 
+
+----
+
+Herotitle: 
+
+----
+
+Herodescription: 
+
+----
+
+Herotextcolor: #ffffff
+
+----
+
+Herobuttons: 
+
+----
+
+Herofullwidth: false
+
+----
+
+Herobackgroundtype: image
+
+----
+
+Herobackgroundimage: 
+
+----
+
+Heroimageoverlay: false
+
+----
+
+Herooverlaycolor: #000000
+
+----
+
+Herobackgroundcolor: #171717
+
+----
+
+Customtitle: 
+
+----
+
+Description: How to turn this Kirby starter into a multilingual site, with optional DeepL translation and the API key kept in .env.
+
+----
+
+Thumbnail: 
+
+----
+
+Robots: 
+
+----
+
+Uuid: ujheyqzlpqpyj0tt

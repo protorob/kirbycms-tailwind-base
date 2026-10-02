@@ -1,0 +1,27 @@
+name: Child pages
+icon: page
+# No `preview: fields`: that renders the form inline, where the selected page
+# is a link that navigates away when clicked. Without it the block shows as a
+# compact title bar and opens its fields in the drawer on click. The label is
+# templated from the block content, so the bar still shows the settings.
+label: "{{ page.0.text }} · {{ columns }} columns"
+
+fields:
+  page:
+    label: Page
+    type: pages
+    multiple: false
+    max: 1
+    required: true
+    help: Shows this page's listed subpages as a grid of cards.
+
+  columns:
+    label: Columns
+    type: toggles
+    default: "2"
+    required: true
+    options:
+      "2": "2"
+      "3": "3"
+      "4": "4"
+    help: On phones the cards always stack in one column; 3 and 4 columns kick in on wider screens (tablets show 2).
