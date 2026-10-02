@@ -21,7 +21,7 @@
 
     <?php if ($page->text()->isNotEmpty()): ?>
       <div class="mt-8 prose max-w-none">
-        <?= $page->text()->toBlocks()->toHtml() ?>
+        <?= $page->text()->toBlocksHtml() ?>
       </div>
     <?php endif ?>
   </div>

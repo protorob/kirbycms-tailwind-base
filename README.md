@@ -174,7 +174,9 @@ Loading is handled by `kirby-helpers`: `config.php` calls `Env::load()` at the t
 
 ## Default page content
 
-`site/blueprints/pages/default.yml`'s `text` field is a `blocks` field (Kirby's visual block editor — text, heading, image, gallery, video, quote, list, table, line, markdown, code, plus the custom Child pages block below), not a plain textarea/KirbyText field. `site/templates/default.php` renders it with `$page->text()->toBlocks()->toHtml()`, wrapped in the same `.prose` container as before, so `@tailwindcss/typography` still styles whatever the blocks produce.
+`site/blueprints/pages/default.yml`'s `text` field is a `blocks` field (Kirby's visual block editor — text, heading, image, gallery, video, quote, list, table, line, markdown, code, plus the custom Child pages block below), not a plain textarea/KirbyText field. `site/templates/default.php` renders it with `$page->text()->toBlocksHtml()`, wrapped in the same `.prose` container as before, so `@tailwindcss/typography` still styles whatever the blocks produce.
+
+`toBlocksHtml()` is a field method from the small custom plugin `site/plugins/blocks-html/`. It's `->toBlocks()->toHtml()` plus one fix: when an editor links to another page or file in the block editor, Kirby stores the link as a permalink (`/@/page/<uuid>`), and its core block snippets output that as-is. Kirby's `@/page/...` route only resolves UUIDs already in its UUID cache, so those links 404 on a fresh cache (e.g. right after a deploy). The method runs Kirby's `permalinksToUrls()` over the output, which looks the UUID up properly and turns it into the real URL. It skips that step when there are no permalinks. **Use `toBlocksHtml()` instead of `toBlocks()->toHtml()` in any new template.**
 
 This is the field editors see on any page using the default blueprint — including the homepage's own body content below the hero (the hero itself is unrelated, driven by its own fields on `$site`, see "Hero sections" above).
 
@@ -347,7 +349,7 @@ site/
     pages/      ← page blueprints (default.yml has the Content + Hero + SEO tabs)
     site.yml    ← Header/Company info/SEO tabs (site-wide hero, CTA, socials, legal pages, SEO defaults)
   config/       ← config.php (plugins, SEO, block list; secrets come from .env)
-  plugins/      ← custom and third-party plugins (composer-managed ones are gitignored)
+  plugins/      ← custom plugins (blocks-html/, committed) and composer-managed ones (gitignored)
   templates/    ← PHP templates
   snippets/     ← reusable template partials (header, footer, hero, cta-button, breadcrumbs,
                   language-switcher, language-list, blocks/child-pages)
