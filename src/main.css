@@ -1,8 +1,10 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* No --font-sans override: Tailwind's default is the system UI stack
+   (ui-sans-serif, system-ui, sans-serif, emoji). To use a webfont, load it
+   first (e.g. @font-face or a <link> in header.php), then set it here. */
 @theme {
-  --font-sans: "Inter", sans-serif;
 }
 
 /* Fallback for browsers without cross-document view transitions (below) —
